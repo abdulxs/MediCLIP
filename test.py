@@ -114,7 +114,7 @@ def main(args):
         if test_dataset_name == 'chexpert':
 
             test_dataset = ChexpertTestDataset( args=args.config,
-                                            source=os.path.join(args.config.data_root,test_dataset_name),
+                                            source=os.path.join('/content/extracted_dataset', test_dataset_name),
                                             preprocess=preprocess,
                                             )
 
@@ -182,8 +182,8 @@ def validate(args, dataset_name, test_dataloader, clip_model, necker, adapter, p
     if dataset_name == 'busi':
         pixel_gts = np.concatenate(pixel_gts,axis=0)
 
-    save_images_root = os.path.join(args.vis_save_root,"{}".format(dataset_name))
-    os.makedirs(save_images_root,exist_ok=True)
+    save_images_root = os.path.join(args.vis_save_root, dataset_name)
+    os.makedirs(save_images_root, exist_ok=True)
 
     if dataset_name=='busi':
          iter= tqdm(
@@ -233,9 +233,9 @@ def validate(args, dataset_name, test_dataloader, clip_model, necker, adapter, p
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Test MediCLIP")
-    parser.add_argument("--config_path", type=str, help="model configs")
-    parser.add_argument("--checkpoint_path", type=str, help='the checkpoint path')
-    parser.add_argument("--vis_save_root", type=str, default='vis_results')
+    parser.add_argument("--config_path", type=str, default="/content/MediCLIP/config/chexpert.yaml", help="model configs")
+    parser.add_argument("--checkpoint_path", type=str, default='/content/MediCLIP/checkpoints/latest_checkpoint.pkl', help='the checkpoint path')
+    parser.add_argument("--vis_save_root", type=str, default='/content/MediCLIP/vis_results', help="Path to save visualization results")
     args = parser.parse_args()
     torch.multiprocessing.set_start_method("spawn")
     main(args)
