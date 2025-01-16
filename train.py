@@ -58,7 +58,9 @@ def main(args):
                             args.config.layers_out)
 
     current_time = get_current_time()
-    args.config.save_root=os.path.join(args.config.save_root,current_time)
+    #args.config.save_root=os.path.join(args.config.save_root,current_time)
+    args.config.save_root = '/content/MediCLIP/results'
+
 
     if not os.path.exists(args.config.save_root):
         os.makedirs(args.config.save_root)
@@ -91,7 +93,7 @@ def main(args):
         ], lr=0.001, betas=(0.5, 0.999))
 
     train_dataset = TrainDataset(args=args.config,
-                                    source=os.path.join(args.config.data_root,args.config.train_dataset),
+                                    source=os.path.join('/content/extracted_dataset',args.config.train_dataset),
                                     preprocess=preprocess,
                                     k_shot=args.k_shot)
 
@@ -206,10 +208,15 @@ def main(args):
 
             if save_flag:
                 logger.info("save checkpoints in epoch: {}".format(epoch+1))
+                # torch.save({
+                #         "adapter_state_dict": adapter.state_dict(),
+                #         "prompt_state_dict": prompt_maker.prompt_learner.state_dict(),
+                #     }, os.path.join(args.config.save_root, 'checkpoints_{}.pkl'.format(epoch + 1)))
                 torch.save({
                         "adapter_state_dict": adapter.state_dict(),
                         "prompt_state_dict": prompt_maker.prompt_learner.state_dict(),
-                    }, os.path.join(args.config.save_root, 'checkpoints_{}.pkl'.format(epoch + 1)))
+                    }, os.path.join('/content/MediCLIP/checkpoints', f'checkpoints_{epoch + 1}.pkl'))
+
 
 
 def train_one_epoch(
@@ -325,7 +332,7 @@ def validate(args, test_dataloaders, epoch, clip_model, necker, adapter, prompt_
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Train MediCLIP")
-    parser.add_argument("--config_path", type=str, default='config/brainmri.yaml', help="model configs")
+    parser.add_argument("--config_path", type=str, default='/content/MediCLIP/config/chexpert.yaml', help="model configs")
     parser.add_argument("--k_shot", type=int, default=16, help="normal image number")
     args = parser.parse_args()
     torch.multiprocessing.set_start_method("spawn")
