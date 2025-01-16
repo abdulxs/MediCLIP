@@ -1,4 +1,4 @@
-torch==1.11.0+cu113
+torch==2.0.1+cu118
 torchvision==0.12.0+cu113
 Pillow==9.1.1
 scikit-image==0.19.3  
